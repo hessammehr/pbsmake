@@ -1,0 +1,20 @@
+ #!/bin/bash
+#PBS -S /bin/bash
+#PBS -l mem=2000MB
+#PBS -l nodes={{.Processors}}:ppn=4
+#PBS -l walltime={{.Hours}}:00:00
+# Adjust the mem and ppn above to match the requirements of your job
+
+# Sample Gaussian job script
+
+cd $PBS_O_WORKDIR
+
+echo "Current working directory is `pwd`"
+echo "Running on `hostname`"
+echo "Starting run at: `date`"
+
+# Set up the Gaussian environment using the module command:
+ module load gaussian
+
+# Run g09
+g09 < {{.FileName}} > {{.Name}}.out
