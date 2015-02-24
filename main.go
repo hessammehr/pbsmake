@@ -14,6 +14,7 @@ import (
 type Job struct {
 	Name         string
 	FileName     string
+	Nodes	     int
 	Processors   int
 	Hours        int
 	TemplateFile string
@@ -65,13 +66,14 @@ func process(job Job) {
 func main() {
 	templateFile := flag.String("template", "template.pbs", "Template file, default: template.pbs")
 	hours := flag.Int("h", 5, "Requested walltime in hours")
+	nodes := flag.Int("n", 1, "Number of nodes to require")
 	processors := flag.Int("p", 4, "Number of processors to require")
 	extension := flag.String("extension", "com", "File extension for input files")
 	flag.Parse()
 	jobFiles := findJobs(".", "."+*extension)
 	for _, jobFile := range jobFiles {
 		jobName := strings.Split(jobFile, ".")[0]
-		job := Job{jobName, jobFile, *processors, *hours, *templateFile}
+		job := Job{jobName, jobFile, *nodes, *processors, *hours, *templateFile}
 		process(job)
 	}
 
