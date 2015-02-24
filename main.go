@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -14,7 +15,7 @@ import (
 type Job struct {
 	Name         string
 	FileName     string
-	Nodes	     int
+	Nodes        int
 	Processors   int
 	Hours        int
 	TemplateFile string
@@ -22,20 +23,20 @@ type Job struct {
 
 func findJobs(dir string, ext string) []string {
 	results := []string{}
-	filepath.Walk(dir, func(fileName string, info os.FileInfo, err error) error {
-		if err != nil {
-			log.Panic("Cannot read contents of current directory!")
+	entries, err := ioutil.ReadDir(".")
+	if err != nil {
+		log.Panic("Cannot read contents of current directory!")
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() && filepath.Ext(entry.Name()) == ext {
+			results = append(results, filepath.Base(entry.Name()))
 		}
-		if !info.IsDir() && filepath.Ext(fileName) == ext {
-			results = append(results, filepath.Base(fileName))
-		}
-		return nil
-	})
+	}
 	return results
 }
 
 func process(job Job) {
-	log.Printf("Processing input file %s", job.FileName)
+	fmt.Printf("Processing input file %s...\n", job.FileName)
 	pbsTemplate, err := ioutil.ReadFile(job.TemplateFile)
 	if err != nil {
 		log.Panicf("Cannot open template file %s", job.TemplateFile)
