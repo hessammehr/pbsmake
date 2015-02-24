@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -58,8 +57,7 @@ func process(job Job) {
 	if templ.Execute(pbsFile, job) != nil {
 		log.Panicf("Cannot write to submission file %s", pbsFileName)
 	}
-	cmd := exec.Command("mv", job.FileName, filepath.Join(job.Name, job.FileName))
-	if cmd.Run() != nil {
+	if os.Rename(job.FileName, filepath.Join(job.Name, job.FileName)) != nil {
 		log.Panicf("Failed to move job file %s to folder %s", job.Name, job.FileName)
 	}
 }

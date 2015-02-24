@@ -5,7 +5,7 @@ pbsmake
 
 Dependencies
 ------------
-`pbsmake` as a binary has no dependencies. Currently `mv` is used to move input files, so only Unix-like systems work.
+`pbsmake` as a binary has no dependencies. It has been tested on Linux, Mac, Windows, FreeBSD, and OpenBSD (only manually, though).
 
 Quickstart
 ----------
