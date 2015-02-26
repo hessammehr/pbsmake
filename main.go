@@ -46,7 +46,7 @@ func process(job Job) {
 		log.Panicf("Cannot not parse template file %s", job.TemplateFile)
 	}
 	if dirErr := os.Mkdir(job.Name, os.ModeDir|0755); dirErr != nil {
-		log.Panicf("Cannot create output directory %s", job.Name)
+		log.Panicf("Cannot create output directory %s, does it already exist?", job.Name)
 	}
 	pbsFileName := filepath.Join("./"+job.Name, "submit-"+job.Name+".pbs")
 	pbsFile, err := os.Create(pbsFileName)
@@ -69,7 +69,13 @@ func main() {
 	processors := flag.Int("p", 4, "Number of processors to require")
 	extension := flag.String("extension", "com", "File extension for input files")
 	flag.Parse()
-	jobFiles := findJobs(".", "."+*extension)
+
+	var jobFiles []string
+	if flag.NArg() == 0 {
+		jobFiles = findJobs(".", "."+*extension)
+	}
+	jobFiles = flag.Args()
+
 	for _, jobFile := range jobFiles {
 		jobName := strings.Split(jobFile, ".")[0]
 		job := Job{jobName, jobFile, *nodes, *processors, *hours, *templateFile}
