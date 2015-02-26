@@ -70,11 +70,10 @@ func main() {
 	extension := flag.String("extension", "com", "File extension for input files")
 	flag.Parse()
 
-	var jobFiles []string
+	jobFiles := flag.Args()
 	if flag.NArg() == 0 {
 		jobFiles = findJobs(".", "."+*extension)
 	}
-	jobFiles = flag.Args()
 
 	for _, jobFile := range jobFiles {
 		jobName := strings.Split(jobFile, ".")[0]
