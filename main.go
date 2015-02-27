@@ -20,6 +20,8 @@ type Job struct {
 	TemplateFile string
 }
 
+var cwd, _ = filepath.Abs(".")
+
 func findJobs(dir string, ext string) []string {
 	results := []string{}
 	entries, err := ioutil.ReadDir(".")
@@ -48,7 +50,7 @@ func process(job Job) {
 	if dirErr := os.Mkdir(job.Name, os.ModeDir|0755); dirErr != nil {
 		log.Panicf("Cannot create output directory %s, does it already exist?", job.Name)
 	}
-	pbsFileName := filepath.Join("./"+job.Name, "submit-"+job.Name+".pbs")
+	pbsFileName := filepath.Join("./"+job.Name, filepath.Base(cwd)+"-"+job.Name+".pbs")
 	pbsFile, err := os.Create(pbsFileName)
 	defer pbsFile.Close()
 	if err != nil {
